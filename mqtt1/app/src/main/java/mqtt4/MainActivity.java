@@ -1,4 +1,4 @@
-package org.home.raja.mqtt4;
+package org.home.soma.mqtt4;
 /*
 https://www.hivemq.com/blog/mqtt-client-library-enyclopedia-paho-android-service/
 other links:
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView mLabel1;
     MqttAndroidClient client;
     String broker = "tcp://broker.mqttdashboard.com:1883";
-    String topic = "ins/dhe/val/mea/607/command";
-    String TAG = "Rajaraman";
+    String topic = "india/delhi/command";
+    String TAG = "Somasi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +43,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLabel1 = (TextView)findViewById(R.id.label1);
         try {
             Log.d(TAG, " --- connecting to broker --- ");
-            makeMqttClient(this, broker, "Rajas_cli_1963");
+            makeMqttClient(this, broker, "SomasClient");
             IMqttToken token = client.connect();
             Log.d(TAG, " --- connected --- ");
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    // We are connected
                     Log.d(TAG, " --- onSuccess --- ");
                 }
                 @Override
@@ -99,6 +98,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onDestroy() {
+        Log.d(TAG, " --- onDestroy --- ");
+        //disconnectMqttClient ?
+        client.unregisterResources();
+        client.close();
+        super.onDestroy();
+    }
+    
+    @Override
     public void onClick(View view) {
         String payload = "ON";
         Log.d(TAG, "Publishing: ");
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             MqttMessage message = new MqttMessage(encodedPayload);
             client.publish(topic, message);
         } catch (Exception e) {
-            Log.d(TAG, " --- EXCEPTION, Raja ! --- ");
+            Log.d(TAG, " --- EXCEPTION, Somas ! --- ");
             e.printStackTrace();
         }
     }
